@@ -27,19 +27,13 @@ function add_ppa() {
 apt_packages+=(
   awscli
   build-essential
-  cmatrix
   cowsay
   curl
   git-core
-  groff
-  hollywood
   htop
-  id3tool
-  imagemagick
   jq
   mercurial
   nmap
-  postgresql
   python-pip
   silversearcher-ag
   sl
@@ -50,20 +44,11 @@ apt_packages+=(
 apt_packages+=(vim)
 is_ubuntu_desktop && apt_packages+=(vim-gnome)
 
-# https://launchpad.net/~stebbins/+archive/ubuntu/handbrake-releases
-add_ppa ppa:stebbins/handbrake-releases
-apt_packages+=(handbrake-cli)
-is_ubuntu_desktop && apt_packages+=(handbrake-gtk)
-
 # https://github.com/rbenv/ruby-build/wiki
 apt_packages+=(
   autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev
   libncurses5-dev libffi-dev libgdbm3 libgdbm-dev zlib1g-dev
 )
-
-# https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-16-04
-add_ppa ppa:ansible/ansible
-apt_packages+=(ansible)
 
 if is_ubuntu_desktop; then
   # http://www.omgubuntu.co.uk/2016/06/install-latest-arc-gtk-theme-ubuntu-16-04
@@ -117,15 +102,6 @@ if is_ubuntu_desktop; then
     echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
   }
 
-  # https://github.com/colinkeenan/silentcast/#ubuntu
-  # https://github.com/colinkeenan/silentcast/#ubuntu-linux-full-install
-  add_ppa ppa:sethj/silentcast
-  add_ppa ppa:webupd8team/y-ppa-manager
-  apt_packages+=(
-    libav-tools x11-xserver-utils xdotool wininfo wmctrl python-gobject python-cairo xdg-utils yad
-    silentcast
-  )
-
   # Misc
   apt_packages+=(adb fastboot)
   apt_packages+=(
@@ -136,9 +112,7 @@ if is_ubuntu_desktop; then
     network-manager-openconnect
     network-manager-openconnect-gnome
     openssh-server
-    shutter
     transgui
-    unity-tweak-tool
     vlc
     xclip
     zenmap
@@ -185,23 +159,6 @@ if is_ubuntu_desktop; then
   # https://discordapp.com/download
   deb_installed+=(/usr/bin/discord)
   deb_sources+=("https://discordapp.com/api/download?platform=linux&format=deb")
-
-  # http://askubuntu.com/questions/854480/how-to-install-the-steam-client/854481#854481
-  apt_packages+=(python-apt)
-  deb_installed+=(/usr/bin/steam)
-  deb_sources+=(deb_source_steam)
-  function deb_source_steam() {
-    local steam_root steam_file
-    steam_root=http://repo.steampowered.com/steam/pool/steam/s/steam/
-    steam_file="$(wget -q -O- "$steam_root?C=M;O=D" | sed -En '/steam-launcher/{s/.*href="([^"]+)".*/\1/;p;q;}')"
-    echo "$steam_root$steam_file"
-  }
-  # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=772598
-  # apt_packages+=(steam)
-  # function preinstall_steam() {
-  #   echo steam steam/question select I AGREE | sudo debconf-set-selections
-  #   echo steam steam/license note | sudo debconf-set-selections
-  # }
 fi
 
 function other_stuff() {
@@ -213,9 +170,6 @@ function other_stuff() {
       sudo make install
     )
   fi
-  # Install misc bins from zip file.
-  install_from_zip ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip'
-  install_from_zip terraform 'https://releases.hashicorp.com/terraform/0.9.2/terraform_0.9.2_linux_amd64.zip'
 }
 
 ####################
